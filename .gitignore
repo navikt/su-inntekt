@@ -1,4 +1,4 @@
-.gradle/
+/.gradle/
 /build/
 out/
 
@@ -43,3 +43,4 @@ nb-configuration.xml
 .DS_Store
 
 mqjms.log.*
+
