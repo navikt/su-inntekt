@@ -1,0 +1,5 @@
+{
+   "ingress": "https://su-inntekt.nais.preprod.local",
+   "secret_env": "dev",
+   "cluster": "preprod"
+}

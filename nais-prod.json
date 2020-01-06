@@ -1,0 +1,5 @@
+{
+   "ingress": "https://su-inntekt.nais.adeo.no",
+   "secret_env": "prod",
+   "cluster": "prod"
+}
