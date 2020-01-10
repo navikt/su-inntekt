@@ -7,13 +7,12 @@ metadata:
       team: supstonad
 spec:
    image: {{ image }}
-   port: 8080
+   replicas:
+      min: 1
    liveness:
       path: isalive
    readiness:
       path: isready
-   ingresses:
-      - {{ingress}}
    webproxy: true
    vault:
       enabled: true
