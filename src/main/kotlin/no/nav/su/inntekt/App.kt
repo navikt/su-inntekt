@@ -21,21 +21,18 @@ import org.json.JSONObject
 import java.net.URL
 
 const val INNTEKT_PATH = "/inntekt"
-const val OIDC_ISSUER = "issuer"
-const val OIDC_GROUP_CLAIM = "groups"
-const val OIDC_JWKS_URI = "jwks_uri"
 
 fun Application.inntekt(env: Environment = Environment()) {
 
-   val jwkConfig = getJWKConfig(env.oidcConfigUrl)
-   val jwkProvider = JwkProviderBuilder(URL(jwkConfig.getString(OIDC_JWKS_URI))).build()
+   val jwkConfig = getJWKConfig(env.AZURE_WELLKNOWN_URL)
+   val jwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build()
 
    install(Authentication) {
       jwt {
-         verifier(jwkProvider, jwkConfig.getString(OIDC_ISSUER))
+         verifier(jwkProvider, jwkConfig.getString("issuer"))
          validate { credentials ->
-            val groupsClaim = credentials.payload.getClaim(OIDC_GROUP_CLAIM).asList(String::class.java)
-            if (env.oidcRequiredGroup in groupsClaim && env.oidcClientId in credentials.payload.audience) {
+            val groupsClaim = credentials.payload.getClaim("groups").asList(String::class.java)
+            if (env.AZURE_REQUIRED_GROUP in groupsClaim && env.AZURE_CLIENT_ID in credentials.payload.audience) {
                JWTPrincipal(credentials.payload)
             } else {
                logInvalidCredentials(credentials)
@@ -62,8 +59,8 @@ private fun Application.logInvalidCredentials(credentials: JWTCredential) {
    )
 }
 
-private fun getJWKConfig(oidcConfigUrl: String): JSONObject {
-   val (_, response, result) = oidcConfigUrl.httpGet().responseJson()
+private fun getJWKConfig(wellKnownUrl: String): JSONObject {
+   val (_, response, result) = wellKnownUrl.httpGet().responseJson()
    if (response.statusCode != HttpStatusCode.OK.value) {
       throw RuntimeException("Could not get JWK config from provider")
    } else {

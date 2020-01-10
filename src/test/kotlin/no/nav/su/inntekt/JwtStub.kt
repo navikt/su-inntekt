@@ -31,8 +31,8 @@ class JwtStub(private val issuer: String, private val wireMockServer: WireMockSe
 
    fun createTokenFor(
       subject: String = "enSaksbehandler",
-      groups: List<String> = listOf(oidcGroupUuid),
-      audience: String = clientId,
+      groups: List<String> = listOf(AZURE_GROUP_ID),
+      audience: String = AZURE_CLIENT_ID,
       expiresAt: Date = from(now().plusSeconds(3600))
    ): String {
       val algorithm = Algorithm.RSA256(publicKey, privateKey)
@@ -42,7 +42,7 @@ class JwtStub(private val issuer: String, private val wireMockServer: WireMockSe
          .withAudience(audience)
          .withKeyId("key-1234")
          .withSubject(subject)
-         .withArrayClaim(OIDC_GROUP_CLAIM, groups.toTypedArray())
+         .withArrayClaim("groups", groups.toTypedArray())
          .withExpiresAt(expiresAt)
          .sign(algorithm)
    }

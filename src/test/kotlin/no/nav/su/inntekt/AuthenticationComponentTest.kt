@@ -95,7 +95,7 @@ internal class AuthenticationComponentTest {
    companion object {
       private val wireMockServer: WireMockServer = WireMockServer(WireMockConfiguration.options().dynamicPort())
       private val jwtStub by lazy {
-         JwtStub(issuer, wireMockServer)
+         JwtStub(AZURE_ISSUER, wireMockServer)
       }
 
       @BeforeAll
