@@ -8,9 +8,9 @@ import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
+import no.nav.su.inntekt.AZURE_ISSUER
 import no.nav.su.inntekt.JwtStub
 import no.nav.su.inntekt.inntekt
-import no.nav.su.inntekt.issuer
 import no.nav.su.inntekt.testEnvironment
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -44,7 +44,7 @@ internal class NaisRoutesComponentTest {
    companion object {
       private val wireMockServer: WireMockServer = WireMockServer(WireMockConfiguration.options().dynamicPort())
       private val jwtStub by lazy {
-         JwtStub(issuer, wireMockServer)
+         JwtStub(AZURE_ISSUER, wireMockServer)
       }
 
       @BeforeAll
