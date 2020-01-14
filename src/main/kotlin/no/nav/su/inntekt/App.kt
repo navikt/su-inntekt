@@ -18,12 +18,15 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import no.nav.su.inntekt.nais.nais
 import org.json.JSONObject
+import org.slf4j.*
 import java.net.URL
 
 const val INNTEKT_PATH = "/inntekt"
 const val OIDC_ISSUER = "issuer"
 const val OIDC_GROUP_CLAIM = "groups"
 const val OIDC_JWKS_URI = "jwks_uri"
+
+private val sikkerLogg = LoggerFactory.getLogger("sikkerLogg")
 
 fun Application.inntekt(env: Environment = Environment()) {
 
@@ -48,6 +51,7 @@ fun Application.inntekt(env: Environment = Environment()) {
    routing {
       authenticate {
          get(INNTEKT_PATH) {
+            sikkerLogg.info("Her vil det etterhvert bli søkt etter inntekter")
             call.respond("A million dollars")
          }
       }
