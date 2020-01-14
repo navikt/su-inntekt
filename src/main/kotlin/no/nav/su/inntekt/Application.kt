@@ -20,9 +20,11 @@ import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.su.inntekt.nais.nais
 import org.json.JSONObject
+import org.slf4j.*
 import java.net.URL
 
 const val INNTEKT_PATH = "/inntekt"
+private val sikkerLogg = LoggerFactory.getLogger("sikkerLogg")
 
 @KtorExperimentalAPI
 fun Application.suinntekt(
@@ -48,6 +50,7 @@ fun Application.suinntekt(
    routing {
       authenticate {
          get(INNTEKT_PATH) {
+            sikkerLogg.info("Her vil det etterhvert bli søkt etter inntekter")
             call.respond("A million dollars")
          }
       }
