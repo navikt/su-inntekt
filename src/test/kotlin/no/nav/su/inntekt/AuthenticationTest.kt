@@ -22,7 +22,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         handleRequest(Get, INNTEKT_PATH)
+         withCallId(Get, INNTEKT_PATH)
       }.apply {
          assertEquals(Unauthorized, response.status())
       }
@@ -35,7 +35,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         handleRequest(Get, INNTEKT_PATH) {
+         withCallId(Get, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -52,7 +52,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         handleRequest(Get, INNTEKT_PATH) {
+         withCallId(Get, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -68,7 +68,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         handleRequest(Get, INNTEKT_PATH) {
+         withCallId(Get, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -84,7 +84,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         handleRequest(Get, INNTEKT_PATH) {
+         withCallId(Get, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
