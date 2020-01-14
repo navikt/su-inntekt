@@ -12,14 +12,16 @@ import java.time.Instant.now
 import java.util.*
 import java.util.Date.from
 
-class JwtStub(private val issuer: String, private val wireMockServer: WireMockServer) {
+class JwtStub(private val wireMockServer: WireMockServer? = null) {
 
    private val privateKey: RSAPrivateKey
-   private val publicKey: RSAPublicKey
+   val publicKey: RSAPublicKey
 
    init {
-      val client = WireMock.create().port(wireMockServer.port()).build()
-      WireMock.configureFor(client)
+      wireMockServer?.apply {
+         val client = WireMock.create().port(wireMockServer.port()).build()
+         WireMock.configureFor(client)
+      }
 
       val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
       keyPairGenerator.initialize(512)
@@ -31,14 +33,14 @@ class JwtStub(private val issuer: String, private val wireMockServer: WireMockSe
 
    fun createTokenFor(
       subject: String = "enSaksbehandler",
-      groups: List<String> = listOf(AZURE_GROUP_ID),
+      groups: List<String> = listOf(AZURE_REQUIRED_GROUP),
       audience: String = AZURE_CLIENT_ID,
       expiresAt: Date = from(now().plusSeconds(3600))
    ): String {
       val algorithm = Algorithm.RSA256(publicKey, privateKey)
 
       return JWT.create()
-         .withIssuer(issuer)
+         .withIssuer(AZURE_ISSUER)
          .withAudience(audience)
          .withKeyId("key-1234")
          .withSubject(subject)
@@ -65,13 +67,13 @@ class JwtStub(private val issuer: String, private val wireMockServer: WireMockSe
       )
    )
 
-   fun stubbedConfigProvider() = WireMock.get(WireMock.urlPathEqualTo("/config")).willReturn(
+   fun stubbedConfigProvider() = WireMock.get(WireMock.urlPathEqualTo("/wellknown")).willReturn(
       WireMock.okJson(
          """
 {
-    "jwks_uri": "${wireMockServer.baseUrl()}/jwks",
-    "token_endpoint": "${wireMockServer.baseUrl()}/token",
-    "issuer": "$issuer"
+    "jwks_uri": "${wireMockServer?.baseUrl()}/jwks",
+    "token_endpoint": "${wireMockServer?.baseUrl()}/token",
+    "issuer": "$AZURE_ISSUER"
 }
 """.trimIndent()
       )

@@ -1,10 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 val ktorVersion = "1.2.6"
 val junitJupiterVersion = "5.6.0-M1"
 val fuelVersion = "2.2.1"
 val orgJsonVersion = "20180813"
 val wireMockVersion = "2.23.2"
+val mockkVersion = "1.9.3"
 
 plugins {
    id("org.jetbrains.kotlin.jvm") version "1.3.61"
@@ -38,6 +37,7 @@ dependencies {
    testImplementation("com.github.tomakehurst:wiremock:$wireMockVersion") {
       exclude(group = "junit")
    }
+   testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 java {
@@ -68,7 +68,7 @@ tasks.named<Jar>("jar") {
    baseName = "app"
 
    manifest {
-      attributes["Main-Class"] = "no.nav.su.inntekt.MainKt"
+      attributes["Main-Class"] = "no.nav.su.inntekt.ApplicationKt"
       attributes["Class-Path"] = configurations.runtimeClasspath.get().joinToString(separator = " ") {
          it.name
       }

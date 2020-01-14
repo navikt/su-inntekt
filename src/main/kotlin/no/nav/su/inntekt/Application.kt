@@ -1,5 +1,6 @@
 package no.nav.su.inntekt
 
+import com.auth0.jwk.JwkProvider
 import com.auth0.jwk.JwkProviderBuilder
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson
@@ -16,23 +17,25 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import io.ktor.util.KtorExperimentalAPI
 import no.nav.su.inntekt.nais.nais
 import org.json.JSONObject
 import java.net.URL
 
 const val INNTEKT_PATH = "/inntekt"
 
-fun Application.inntekt(env: Environment = Environment()) {
+@KtorExperimentalAPI
+fun Application.suinntekt(
+   jwkConfig: JSONObject = getJWKConfig(fromEnvironment("azure.wellKnownUrl")),
+   jwkProvider: JwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build()
 
-   val jwkConfig = getJWKConfig(env.AZURE_WELLKNOWN_URL)
-   val jwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build()
-
+) {
    install(Authentication) {
       jwt {
          verifier(jwkProvider, jwkConfig.getString("issuer"))
          validate { credentials ->
             val groupsClaim = credentials.payload.getClaim("groups").asList(String::class.java)
-            if (env.AZURE_REQUIRED_GROUP in groupsClaim && env.AZURE_CLIENT_ID in credentials.payload.audience) {
+            if (fromEnvironment("azure.requiredGroup") in groupsClaim && fromEnvironment("azure.clientId") in credentials.payload.audience) {
                JWTPrincipal(credentials.payload)
             } else {
                logInvalidCredentials(credentials)
@@ -67,3 +70,9 @@ private fun getJWKConfig(wellKnownUrl: String): JSONObject {
       return result.get().obj()
    }
 }
+
+@KtorExperimentalAPI
+fun Application.fromEnvironment(path: String): String = environment.config.property(path).getString()
+
+fun main(args: Array<String>) = io.ktor.server.netty.EngineMain.main(args)
+
