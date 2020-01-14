@@ -20,7 +20,7 @@ import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.su.inntekt.nais.nais
 import org.json.JSONObject
-import org.slf4j.*
+import org.slf4j.LoggerFactory
 import java.net.URL
 
 const val INNTEKT_PATH = "/inntekt"
