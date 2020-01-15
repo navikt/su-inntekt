@@ -7,7 +7,11 @@ import com.github.kittinunf.fuel.jackson.responseObject
 import no.nav.su.inntekt.sts.StsToken.Companion.isValid
 import java.time.LocalDateTime
 
-class STS(private val baseUrl: String, private val username: String, private val password: String) {
+class STS(
+   private val baseUrl: String = "http://security-token-service",
+   private val username: String,
+   private val password: String
+) {
    private var stsToken: StsToken? = null
 
    fun token(): String {

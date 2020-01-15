@@ -28,6 +28,7 @@ import io.micrometer.core.instrument.binder.system.*
 import io.micrometer.prometheus.*
 import io.prometheus.client.*
 import no.nav.su.inntekt.nais.nais
+import no.nav.su.inntekt.sts.STS
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -42,8 +43,8 @@ val collectorRegistry = CollectorRegistry.defaultRegistry
 @KtorExperimentalAPI
 fun Application.suinntekt(
    jwkConfig: JSONObject = getJWKConfig(fromEnvironment("azure.wellKnownUrl")),
-   jwkProvider: JwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build()
-
+   jwkProvider: JwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build(),
+   sts: STS = STS(username = fromEnvironment("sts.username"), password = fromEnvironment("sts.password"))
 ) {
    install(Authentication) {
       jwt {

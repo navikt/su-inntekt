@@ -30,6 +30,8 @@ fun Application.testEnv(wireMockServer: WireMockServer? = null) {
       put("azure.requiredGroup", AZURE_REQUIRED_GROUP)
       put("azure.clientId", AZURE_CLIENT_ID)
       put("azure.wellKnownUrl", "$baseUrl$AZURE_WELL_KNOWN_URL")
+      put("sts.username", "srvsupstonad")
+      put("sts.password", "supersecret")
    }
 }
 
