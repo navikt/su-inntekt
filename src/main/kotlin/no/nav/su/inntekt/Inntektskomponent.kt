@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
@@ -13,7 +12,6 @@ import io.ktor.client.request.accept
 import io.ktor.client.request.header
 import io.ktor.client.request.request
 import io.ktor.client.response.HttpResponse
-import io.ktor.client.response.readText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
@@ -49,50 +47,26 @@ class Inntektskomponent(
             "maanedTom" to tom
          )
       }
-         .let { toMånedListe(objectMapper.readValue(it.readText())) }
 }
 
-private fun toMånedListe(node: JsonNode) = node["arbeidsInntektMaaned"].map(::tilMåned)
-
-private fun toInntekt(node: JsonNode) = Inntekt(
-   beløp = node["beloep"].asDouble(),
-   inntektstype = Inntektstype.valueOf(node["inntektType"].textValue()),
-   orgnummer = node["virksomhet"].let {
-      if (it["aktoerType"].asText() == "ORGANISASJON") {
-         it["identifikator"].asText()
-      } else {
-         null
-      }
-   }
-)
-
-private fun tilMåned(node: JsonNode) = Måned(
-   YearMonth.parse(node["aarMaaned"].asText()),
-   node["arbeidsInntektInformasjon"]["inntektListe"].map(::toInntekt)
-)
-
-data class Måned(
-   val årMåned: YearMonth,
-   val inntektsliste: List<Inntekt>
-)
-
-data class Inntekt(
-   val beløp: Double,
-   val inntektstype: Inntektstype,
-   val orgnummer: String?
-)
-
-enum class Inntektstype {
-   LOENNSINNTEKT,
-   NAERINGSINNTEKT,
-   PENSJON_ELLER_TRYGD,
-   YTELSE_FRA_OFFENTLIGE
+class Inntekter(source: String) {
+   private val månedligInntekter = objectMapper.readTree(source).get("arbeidsInntektMaaned").toList().map { MaanedligInntekt(it) }
+   fun totalInntekt(year: Int) = månedligInntekter.filter { it.year == year }.sumByDouble { it.totalInntekt() }
+}
+private class MaanedligInntekt(source: JsonNode) {
+   internal val year = source.get("aarMaaned").textValue().subSequence(0, 4).toString().toInt()
+   internal val month = source.get("aarMaaned").textValue().subSequence(6, 7).toString().toInt()
+   internal val inntekter = source.get("arbeidsInntektInformasjon").get("inntektListe").toList().map { Inntekt(it) }
+   internal fun totalInntekt() = inntekter.sumByDouble { it.beløp }
+}
+private class Inntekt(source: JsonNode) {
+   internal val beløp = source.get("beloep").asDouble()
+   internal val type = source.get("inntektType").textValue()
 }
 
 val objectMapper: ObjectMapper = jacksonObjectMapper()
    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
    .registerModule(JavaTimeModule())
-
 
 private fun simpleHttpClient() = HttpClient() {
    install(JsonFeature) {
