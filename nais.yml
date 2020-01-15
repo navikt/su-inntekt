@@ -26,5 +26,7 @@ spec:
             kvPath: /secret/supstonad/{{ secret_env }}
          -  mountPath: /var/run/secrets/nais.io/vault/su-inntekt
             kvPath: /kv/{{ cluster }}/fss/su-inntekt/default
+         -  mountPath: /var/run/secrets/nais.io/srvuser
+            kvPath: /serviceuser/data/{{ secret_env }}/srvsupstonad
          -  mountPath: /var/run/secrets/nais.io/azuread
             kvPath: /azuread/data/{{ secret_env }}/creds/su-inntekt
