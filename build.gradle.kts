@@ -20,6 +20,7 @@ dependencies {
    implementation("io.ktor:ktor-server-netty:$ktorVersion")
    implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
    implementation ("com.github.kittinunf.fuel:fuel-json:$fuelVersion")
+   implementation ("com.github.kittinunf.fuel:fuel-jackson:$fuelVersion")
    implementation ("org.json:json:$orgJsonVersion")
 
    implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
