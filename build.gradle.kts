@@ -18,9 +18,15 @@ repositories {
 dependencies {
    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+   implementation("io.ktor:ktor-client-core:$ktorVersion")
+   implementation("io.ktor:ktor-client-apache:$ktorVersion")
+   implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
+   implementation("io.ktor:ktor-client-jackson:$ktorVersion")
    implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
    implementation ("com.github.kittinunf.fuel:fuel-json:$fuelVersion")
    implementation ("com.github.kittinunf.fuel:fuel-jackson:$fuelVersion")
+   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.10")
+   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.10")
    implementation ("org.json:json:$orgJsonVersion")
 
    implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
