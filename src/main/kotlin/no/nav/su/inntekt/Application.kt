@@ -16,10 +16,17 @@ import io.ktor.features.RejectedCallIdException
 import io.ktor.features.callId
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.metrics.micrometer.*
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
+import io.micrometer.core.instrument.*
+import io.micrometer.core.instrument.binder.jvm.*
+import io.micrometer.core.instrument.binder.logging.*
+import io.micrometer.core.instrument.binder.system.*
+import io.micrometer.prometheus.*
+import io.prometheus.client.*
 import no.nav.su.inntekt.nais.nais
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -29,6 +36,8 @@ import java.net.URL
 
 const val INNTEKT_PATH = "/inntekt"
 private val sikkerLogg = LoggerFactory.getLogger("sikkerLogg")
+
+val collectorRegistry = CollectorRegistry.defaultRegistry
 
 @KtorExperimentalAPI
 fun Application.suinntekt(
@@ -49,6 +58,22 @@ fun Application.suinntekt(
             }
          }
       }
+   }
+
+   install(MicrometerMetrics) {
+      registry = PrometheusMeterRegistry(
+         PrometheusConfig.DEFAULT,
+         collectorRegistry,
+         Clock.SYSTEM
+      )
+      meterBinders = kotlin.collections.listOf(
+         ClassLoaderMetrics(),
+         JvmMemoryMetrics(),
+         JvmGcMetrics(),
+         ProcessorMetrics(),
+         JvmThreadMetrics(),
+         LogbackMetrics()
+      )
    }
 
    routing {

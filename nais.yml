@@ -16,6 +16,9 @@ spec:
    webproxy: true
    secureLogs:
       enabled: true
+   prometheus:
+      enabled: true
+      path: /metrics
    vault:
       enabled: true
       paths:

@@ -4,6 +4,7 @@ val fuelVersion = "2.2.1"
 val orgJsonVersion = "20180813"
 val wireMockVersion = "2.23.2"
 val mockkVersion = "1.9.3"
+val micrometerRegistryPrometheusVersion = "1.3.2"
 
 plugins {
    id("org.jetbrains.kotlin.jvm") version "1.3.61"
@@ -20,6 +21,9 @@ dependencies {
    implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
    implementation ("com.github.kittinunf.fuel:fuel-json:$fuelVersion")
    implementation ("org.json:json:$orgJsonVersion")
+
+   implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
+   implementation("io.micrometer:micrometer-registry-prometheus:$micrometerRegistryPrometheusVersion")
 
    implementation("ch.qos.logback:logback-classic:1.2.3")
    implementation("net.logstash.logback:logstash-logback-encoder:5.2")
