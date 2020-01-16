@@ -54,7 +54,7 @@ fun Application.usingMocks(
 
    every {
       inntektskomponent.hentInntektsliste(any(), any(), any(), any())
-   } returns (Inntekter(inntektJson.trimIndent()))
+   } returns (Inntekter(inntektJson))
 
    suinntekt(
       jwkConfig = jwkConfig,

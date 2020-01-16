@@ -53,6 +53,12 @@ class Inntekter(source: String) {
       objectMapper.readTree(source).get("arbeidsInntektMaaned").toList().map { MaanedligInntekt(it) }
 
    fun totalInntekt(year: Int) = månedligInntekter.filter { it.year == year }.sumByDouble { it.totalInntekt() }
+
+   fun toJson(): String = """
+      {
+       "maanedligInntekter": [${månedligInntekter.map { it.toJson() }.joinToString(",")}]
+      }
+   """.trimIndent()
 }
 
 private class MaanedligInntekt(source: JsonNode) {
@@ -60,11 +66,24 @@ private class MaanedligInntekt(source: JsonNode) {
    internal val month = source.get("aarMaaned").textValue().subSequence(6, 7).toString().toInt()
    internal val inntekter = source.get("arbeidsInntektInformasjon").get("inntektListe").toList().map { Inntekt(it) }
    internal fun totalInntekt() = inntekter.sumByDouble { it.beløp }
+   fun toJson(): String = """
+      {
+         "year": "$year",
+         "month": "$month",
+         "inntekter": [${inntekter.map { it.toJson() }.joinToString(",")}]
+      }
+   """.trimIndent()
 }
 
 private class Inntekt(source: JsonNode) {
    internal val beløp = source.get("beloep").asDouble()
    internal val type = source.get("inntektType").textValue()
+   fun toJson(): String = """
+      {
+         "beloep": "$beløp",
+         "type": "$type"
+      }
+   """.trimIndent()
 }
 
 val objectMapper: ObjectMapper = jacksonObjectMapper()

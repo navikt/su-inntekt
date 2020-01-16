@@ -103,9 +103,7 @@ fun Application.suinntekt(
                YearMonth.parse(params.getOrFail("tom")),
                call.callId!!
             )
-            val json =
-               objectMapper.writeValueAsString(inntekter)
-            call.respond(HttpStatusCode.OK, json)
+            call.respond(HttpStatusCode.OK, inntekter.toJson())
          }
       }
       nais()
