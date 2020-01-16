@@ -40,7 +40,8 @@ val jwtStub = JwtStub()
 @KtorExperimentalAPI
 fun Application.usingMocks(
    jwkConfig: JSONObject = mockk(relaxed = true),
-   jwkProvider: JwkProvider = mockk(relaxed = true)
+   jwkProvider: JwkProvider = mockk(relaxed = true),
+   inntektskomponent: Inntektskomponent = mockk(relaxed = true)
 ) {
    val e = Base64.getEncoder().encodeToString(jwtStub.publicKey.publicExponent.toByteArray())
    val n = Base64.getEncoder().encodeToString(jwtStub.publicKey.modulus.toByteArray())
@@ -51,9 +52,14 @@ fun Application.usingMocks(
       jwkConfig.getString("issuer")
    }.returns(AZURE_ISSUER)
 
+   every {
+      inntektskomponent.hentInntektsliste(any(), any(), any(), any())
+   } returns (Inntekter(inntektJson.trimIndent()))
+
    suinntekt(
       jwkConfig = jwkConfig,
-      jwkProvider = jwkProvider
+      jwkProvider = jwkProvider,
+      inntekt = inntektskomponent
    )
 }
 
@@ -67,3 +73,50 @@ fun TestApplicationEngine.withCallId(
       setup()
    }
 }
+
+private val inntektJson = """
+   {
+      "ident": {
+         "identifikator": "12121212345",
+         "aktoerType": "NATURLIG_IDENT"
+      },
+      "arbeidsInntektMaaned": [{
+         "aarMaaned": "2018-01",
+         "arbeidsInntektInformasjon": {
+            "inntektListe": [{
+               "beloep": "1000.50",
+               "inntektType": "LOENNSINNTEKT"
+            }]
+         }
+      },
+         {
+            "aarMaaned": "2018-02",
+            "arbeidsInntektInformasjon": {
+               "inntektListe": [{
+                  "beloep": "1000.50",
+                  "inntektType": "LOENNSINNTEKT"
+               }]
+            }
+         },
+         {
+            "aarMaaned": "2018-03",
+            "arbeidsInntektInformasjon": {
+               "inntektListe": [{
+                  "beloep": "1000.50",
+                  "inntektType": "LOENNSINNTEKT"
+               }]
+            }
+         },
+         {
+            "aarMaaned": "2019-01",
+            "arbeidsInntektInformasjon": {
+               "inntektListe": [{
+                  "beloep": "1000.50",
+                  "inntektType": "LOENNSINNTEKT"
+               }]
+            }
+         }
+      ]
+   }
+
+""".trimIndent()

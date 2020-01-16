@@ -1,10 +1,12 @@
 package no.nav.su.inntekt
 
+import io.ktor.http.ContentType.Application.FormUrlEncoded
+import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpHeaders.Authorization
-import io.ktor.http.HttpMethod.Companion.Get
+import io.ktor.http.HttpMethod.Companion.Post
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
 import org.junit.jupiter.api.Assertions
@@ -22,7 +24,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Get, INNTEKT_PATH)
+         withCallId(Post, INNTEKT_PATH)
       }.apply {
          assertEquals(Unauthorized, response.status())
       }
@@ -35,12 +37,13 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Get, INNTEKT_PATH) {
+         withCallId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
+            addHeader(ContentType, FormUrlEncoded.toString())
+            setBody("fnr=01010112345&fom=2018-01&tom=2018-12")
          }
       }.apply {
          assertEquals(OK, response.status())
-         assertEquals("A million dollars", response.content)
       }
    }
 
@@ -52,7 +55,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Get, INNTEKT_PATH) {
+         withCallId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -68,7 +71,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Get, INNTEKT_PATH) {
+         withCallId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -84,7 +87,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Get, INNTEKT_PATH) {
+         withCallId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {

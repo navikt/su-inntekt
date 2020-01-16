@@ -10,23 +10,26 @@ import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.JWTCredential
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
-import io.ktor.features.CallId
-import io.ktor.features.CallLogging
-import io.ktor.features.RejectedCallIdException
-import io.ktor.features.callId
+import io.ktor.client.features.json.JacksonSerializer
+import io.ktor.features.*
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.*
+import io.ktor.request.receiveParameters
+import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.getOrFail
 import io.micrometer.core.instrument.*
 import io.micrometer.core.instrument.binder.jvm.*
 import io.micrometer.core.instrument.binder.logging.*
 import io.micrometer.core.instrument.binder.system.*
 import io.micrometer.prometheus.*
 import io.prometheus.client.*
+import kotlinx.coroutines.runBlocking
 import no.nav.su.inntekt.nais.nais
 import no.nav.su.inntekt.sts.STS
 import org.json.JSONObject
@@ -34,6 +37,7 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.slf4j.event.Level
 import java.net.URL
+import java.time.YearMonth
 
 const val INNTEKT_PATH = "/inntekt"
 private val sikkerLogg = LoggerFactory.getLogger("sikkerLogg")
@@ -82,10 +86,7 @@ fun Application.suinntekt(
       authenticate {
          install(CallId) {
             header(HttpHeaders.XRequestId)
-            generate { "invalid" }
-            verify { callId: String ->
-               if (callId == "invalid") throw RejectedCallIdException(callId) else true
-            }
+            generate(17)
          }
          install(CallLogging) {
             level = Level.INFO
@@ -93,9 +94,18 @@ fun Application.suinntekt(
                MDC.put(HttpHeaders.XRequestId, call.callId)
             }
          }
-         get(INNTEKT_PATH) {
+         post(INNTEKT_PATH) {
             sikkerLogg.info("Her vil det etterhvert bli søkt etter inntekter")
-            call.respond("A million dollars")
+            val params = call.receiveParameters()
+            val inntekter = inntekt.hentInntektsliste(
+               params.getOrFail("fnr"),
+               YearMonth.parse(params.getOrFail("fom")),
+               YearMonth.parse(params.getOrFail("tom")),
+               call.callId!!
+            )
+            val json =
+               objectMapper.writeValueAsString(inntekter)
+            call.respond(HttpStatusCode.OK, json)
          }
       }
       nais()
