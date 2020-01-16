@@ -1,10 +1,9 @@
 package no.nav.su.inntekt.sts
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.fuel.jackson.responseObject
 import no.nav.su.inntekt.sts.StsToken.Companion.isValid
+import org.json.JSONObject
 import java.time.LocalDateTime
 
 class STS(
@@ -19,20 +18,21 @@ class STS(
          val (_, _, result) = "$baseUrl/rest/v1/sts/token?grant_type=client_credentials&scope=openid".httpGet()
             .authentication().basic(username, password)
             .header(mapOf("Accept" to "application/json"))
-            .responseObject<StsToken>()
+            .response()
 
-         stsToken = result.get();
+         stsToken = StsToken(String(result.get()));
       }
       return stsToken!!.accessToken
    }
 }
 
-data class StsToken(
-   @JsonProperty("access_token") val accessToken: String,
-   @JsonProperty("token_type") val tokenType: String,
-   @JsonProperty("expires_in") val expiresIn: Int
+class StsToken(
+   private val source: String
 ) {
-   val expirationTime = LocalDateTime.now().plusSeconds(expiresIn - 20L)
+   private val json: JSONObject = JSONObject(source)
+   val accessToken: String = json.getString("access_token")
+   private val expiresIn: Int = json.getInt("expires_in")
+   val expirationTime: LocalDateTime = LocalDateTime.now().plusSeconds(expiresIn - 20L)
 
    companion object {
       fun isValid(token: StsToken?): Boolean {

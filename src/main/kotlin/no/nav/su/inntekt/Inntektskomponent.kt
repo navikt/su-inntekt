@@ -1,10 +1,5 @@
 package no.nav.su.inntekt
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.request.accept
 import io.ktor.client.request.header
@@ -14,6 +9,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import no.nav.su.inntekt.sts.STS
+import org.json.JSONObject
 import java.time.YearMonth
 
 class Inntektskomponent(
@@ -49,23 +45,26 @@ class Inntektskomponent(
 }
 
 class Inntekter(source: String) {
-   private val månedligInntekter =
-      objectMapper.readTree(source).get("arbeidsInntektMaaned").toList().map { MaanedligInntekt(it) }
+   private val maanedligInntekter = JSONObject(source).getJSONArray("arbeidsInntektMaaned").map {
+      MaanedligInntekt(it as JSONObject)
+   }
 
-   fun totalInntekt(year: Int) = månedligInntekter.filter { it.year == year }.sumByDouble { it.totalInntekt() }
+   fun totalInntekt(year: Int) = maanedligInntekter.filter { it.year == year }.sumByDouble { it.totalInntekt() }
 
    fun toJson(): String = """
       {
-       "maanedligInntekter": [${månedligInntekter.map { it.toJson() }.joinToString(",")}]
+       "maanedligInntekter": [${maanedligInntekter.map { it.toJson() }.joinToString(",")}]
       }
    """.trimIndent()
 }
 
-private class MaanedligInntekt(source: JsonNode) {
-   internal val year = source.get("aarMaaned").textValue().subSequence(0, 4).toString().toInt()
-   internal val month = source.get("aarMaaned").textValue().subSequence(6, 7).toString().toInt()
-   internal val inntekter = source.get("arbeidsInntektInformasjon").get("inntektListe").toList().map { Inntekt(it) }
-   internal fun totalInntekt() = inntekter.sumByDouble { it.beløp }
+private class MaanedligInntekt(source: JSONObject) {
+   internal val year = source.getString("aarMaaned").subSequence(0, 4).toString().toInt()
+   internal val month = source.getString("aarMaaned").subSequence(6, 7).toString().toInt()
+   internal val inntekter =
+      source.getJSONObject("arbeidsInntektInformasjon").getJSONArray("inntektListe").map { Inntekt(it as JSONObject) }
+
+   internal fun totalInntekt() = inntekter.sumByDouble { it.beloep }
    fun toJson(): String = """
       {
          "year": "$year",
@@ -75,17 +74,13 @@ private class MaanedligInntekt(source: JsonNode) {
    """.trimIndent()
 }
 
-private class Inntekt(source: JsonNode) {
-   internal val beløp = source.get("beloep").asDouble()
-   internal val type = source.get("inntektType").textValue()
+private class Inntekt(source: JSONObject) {
+   internal val beloep = source.getDouble("beloep")
+   internal val type = source.getString("inntektType")
    fun toJson(): String = """
       {
-         "beloep": "$beløp",
+         "beloep": "$beloep",
          "type": "$type"
       }
    """.trimIndent()
 }
-
-val objectMapper: ObjectMapper = jacksonObjectMapper()
-   .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-   .registerModule(JavaTimeModule())
