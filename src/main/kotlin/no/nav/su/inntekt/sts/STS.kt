@@ -7,7 +7,7 @@ import org.json.JSONObject
 import java.time.LocalDateTime
 
 class STS(
-   private val baseUrl: String = "http://security-token-service",
+   private val baseUrl: String = "http://security-token-service.default.svc.nais.local",
    private val username: String,
    private val password: String
 ) {
