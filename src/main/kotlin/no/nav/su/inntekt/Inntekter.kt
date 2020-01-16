@@ -7,31 +7,32 @@ class Inntekter(source: String) {
        MaanedligInntekt(it as JSONObject)
    }
 
-   fun totalInntekt(year: Int) = maanedligInntekter.filter { it.year == year }.sumByDouble { it.totalInntekt() }
-
+   fun totalInntekt(year: Int) = maanedligInntekter.filter { it.validForYear(year) }.sumByDouble { it.totalInntekt() }
    fun toJson(): String = """
       {
-       "maanedligInntekter": [${maanedligInntekter.map { it.toJson() }.joinToString(",")}]
+       "maanedligInntekter": [${maanedligInntekter.joinToString(",") { it.toJson() }}]
       }
    """.trimIndent()
 }
 
 private class MaanedligInntekt(source: JSONObject) {
-   internal val year = source.getString("aarMaaned").subSequence(0, 4).toString().toInt()
-   internal val month = source.getString("aarMaaned").subSequence(6, 7).toString().toInt()
-   internal val inntekter =
+   private val year = source.getString("aarMaaned").subSequence(0, 4).toString().toInt()
+   private val month = source.getString("aarMaaned").subSequence(6, 7).toString().toInt()
+   private val inntekter =
       source.getJSONObject("arbeidsInntektInformasjon").getJSONArray("inntektListe").map {
           Inntekt(
               it as JSONObject
           )
       }
 
+   internal fun validForYear(year: Int) = year == this.year
    internal fun totalInntekt() = inntekter.sumByDouble { it.beloep }
    fun toJson(): String = """
       {
          "year": "$year",
          "month": "$month",
-         "inntekter": [${inntekter.map { it.toJson() }.joinToString(",")}]
+         "inntekter": [${inntekter.joinToString(",") { it.toJson() }}],
+         "maanedsinntekt": ${totalInntekt()}
       }
    """.trimIndent()
 }
