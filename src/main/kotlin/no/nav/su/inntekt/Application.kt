@@ -7,6 +7,7 @@ import com.github.kittinunf.fuel.json.responseJson
 import io.ktor.application.*
 import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
 import io.ktor.auth.jwt.JWTCredential
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
@@ -17,6 +18,7 @@ import io.ktor.features.generate
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
+import io.ktor.request.authorization
 import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.routing.post
@@ -98,8 +100,8 @@ fun Application.suinntekt(
             }
          }
          post(INNTEKT_PATH) {
-            sikkerLogg.info("Her vil det etterhvert bli søkt etter inntekter")
             val params = call.receiveParameters()
+            sikkerLogg.info("${call.authentication.principal} trying to look up something ($params)")
             val inntekter = inntekt.hentInntektsliste(
                params.getOrFail("fnr"),
                YearMonth.parse(params.getOrFail("fom")),
