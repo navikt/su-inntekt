@@ -29,16 +29,18 @@ class Inntektskomponent(
          header("Nav-Call-Id", callId)
          contentType(ContentType.Application.Json)
          accept(ContentType.Application.Json)
-         body = mapOf(
-            "ident" to mapOf(
-               "identifikator" to fnr,
-               "aktoerType" to "NATURLIG_IDENT"
-            ),
-            "ainntektsfilter" to "SupplerendeStoenadA-inntekt",
-            "formaal" to "Supplerende",
-            "maanedFom" to fom,
-            "maanedTom" to tom
-         )
+         body = """
+            {
+            "ident": {
+               "identifikator": "$fnr",
+               "aktoerType": "NATURLIG_IDENT"
+               },
+            "ainntektsfilter": "SupplerendeStoenadA-inntekt",
+            "formaal": "Supplerende",
+            "maandedFom": "$fom",
+            "maanedTom": "$tom"
+            }
+         """.trimIndent()
       })
    }
 }
