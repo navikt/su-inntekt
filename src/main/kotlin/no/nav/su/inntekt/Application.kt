@@ -18,7 +18,6 @@ import io.ktor.features.generate
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
-import io.ktor.request.authorization
 import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.routing.post
