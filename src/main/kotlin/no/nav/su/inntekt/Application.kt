@@ -18,6 +18,7 @@ import io.ktor.features.generate
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
+import io.ktor.request.path
 import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.routing.post
@@ -97,6 +98,7 @@ fun Application.suinntekt(
             intercept(ApplicationCallPipeline.Monitoring) {
                MDC.put(HttpHeaders.XRequestId, call.callId)
             }
+            filter { call-> call.request.path().startsWith(INNTEKT_PATH) }
          }
          post(INNTEKT_PATH) {
             log.info("prøver å hente inntekter")
