@@ -99,6 +99,7 @@ fun Application.suinntekt(
             }
          }
          post(INNTEKT_PATH) {
+            log.info("prøver å hente inntekter")
             val params = call.receiveParameters()
             sikkerLogg.info("${call.authentication.principal} trying to look up something ($params)")
             val inntekter = inntekt.hentInntektsliste(
