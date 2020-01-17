@@ -28,7 +28,6 @@ class Inntektskomponent(
          header("Authorization", "Bearer ${stsRestClient.token()}")
          header("Nav-Consumer-Id", "supstonad")
          header("Nav-Call-Id", callId)
-         contentType(ContentType.Application.Json)
          accept(ContentType.Application.Json)
          body = TextContent("""
             {
