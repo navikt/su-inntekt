@@ -3,7 +3,9 @@ package no.nav.su.inntekt
 import io.ktor.client.HttpClient
 import io.ktor.client.request.accept
 import io.ktor.client.request.header
+import io.ktor.client.request.post
 import io.ktor.client.request.request
+import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
@@ -22,14 +24,13 @@ class Inntektskomponent(
       tom: YearMonth,
       callId: String
    ) = runBlocking {
-      Inntekter(httpClient.request("$baseUrl/api/v1/hentinntektliste") {
-         method = HttpMethod.Post
+      Inntekter(httpClient.post("$baseUrl/api/v1/hentinntektliste") {
          header("Authorization", "Bearer ${stsRestClient.token()}")
          header("Nav-Consumer-Id", "supstonad")
          header("Nav-Call-Id", callId)
          contentType(ContentType.Application.Json)
          accept(ContentType.Application.Json)
-         body = """
+         body = TextContent("""
             {
             "ident": {
                "identifikator": "$fnr",
@@ -40,8 +41,7 @@ class Inntektskomponent(
             "maandedFom": "$fom",
             "maanedTom": "$tom"
             }
-         """.trimIndent()
+         """.trimIndent(), ContentType.Application.Json)
       })
    }
 }
-
