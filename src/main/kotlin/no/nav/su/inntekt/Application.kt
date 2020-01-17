@@ -7,7 +7,6 @@ import com.github.kittinunf.fuel.json.responseJson
 import io.ktor.application.*
 import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
-import io.ktor.auth.authentication
 import io.ktor.auth.jwt.JWTCredential
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
@@ -53,8 +52,8 @@ val collectorRegistry = CollectorRegistry.defaultRegistry
 fun Application.suinntekt(
    jwkConfig: JSONObject = getJWKConfig(fromEnvironment("azure.wellKnownUrl")),
    jwkProvider: JwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build(),
-   sts: STS = STS(username = fromEnvironment("sts.username"), password = fromEnvironment("sts.password")),
-   inntekt: Inntektskomponent = Inntektskomponent(baseUrl = fromEnvironment("inntektUrl"), stsRestClient = sts)
+   sts: STS = STS(baseUrl = fromEnvironment("sts.baseUrl"), username = fromEnvironment("sts.username"), password = fromEnvironment("sts.password")),
+   inntekt: InntektskomponentClient = InntektskomponentClient(baseUrl = fromEnvironment("inntektUrl"), stsRestClient = sts)
 ) {
    install(Authentication) {
       jwt {
@@ -101,9 +100,7 @@ fun Application.suinntekt(
             filter { call-> call.request.path().startsWith(INNTEKT_PATH) }
          }
          post(INNTEKT_PATH) {
-            log.info("prøver å hente inntekter")
             val params = call.receiveParameters()
-            sikkerLogg.info("${call.authentication.principal} trying to look up something ($params)")
             val inntekter = inntekt.hentInntektsliste(
                params.getOrFail("fnr"),
                YearMonth.parse(params.getOrFail("fom")),

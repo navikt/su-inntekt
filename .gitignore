@@ -1,46 +1,12 @@
-/.gradle/
-/build/
-out/
+# Ignore Gradle project-specific cache directory
+.gradle
 
-.gitattributes
-
-gradle-app.setting
-
-.gradletasknamecache
-*.env
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-*.war
-*.ear
-*.sar
-*.class
+# Ignore Gradle build output directory
+build
 
 *.iml
-*.iws
-*.ipr
 .idea/
+out/
 
-.settings/
-.classpath
-.project
-
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-nbactions.xml
-nb-configuration.xml
-
-!gradle-wrapper.jar
-
-.DS_Store
-
-mqjms.log.*
-
+*.DS_STORE
+*.env

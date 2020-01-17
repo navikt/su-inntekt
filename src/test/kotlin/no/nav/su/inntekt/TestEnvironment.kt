@@ -22,6 +22,8 @@ const val AZURE_CLIENT_ID = "clientId"
 const val AZURE_ISSUER = "azure"
 const val AZURE_WELL_KNOWN_URL = "/wellknown"
 const val DEFAULT_CALL_ID = "callId"
+const val STS_USERNAME = "srvsupstonad"
+const val STS_PASSWORD = "supersecret"
 
 @KtorExperimentalAPI
 fun Application.testEnv(wireMockServer: WireMockServer? = null) {
@@ -30,9 +32,10 @@ fun Application.testEnv(wireMockServer: WireMockServer? = null) {
       put("azure.requiredGroup", AZURE_REQUIRED_GROUP)
       put("azure.clientId", AZURE_CLIENT_ID)
       put("azure.wellKnownUrl", "$baseUrl$AZURE_WELL_KNOWN_URL")
-      put("sts.username", "srvsupstonad")
-      put("sts.password", "supersecret")
-      put("inntektUrl", "http://inntekt/")
+      put("sts.baseUrl", baseUrl)
+      put("sts.username", STS_USERNAME)
+      put("sts.password", STS_PASSWORD)
+      put("inntektUrl", baseUrl)
    }
 }
 
@@ -41,7 +44,7 @@ val jwtStub = JwtStub()
 fun Application.usingMocks(
    jwkConfig: JSONObject = mockk(relaxed = true),
    jwkProvider: JwkProvider = mockk(relaxed = true),
-   inntektskomponent: Inntektskomponent = mockk(relaxed = true)
+   inntektskomponent: InntektskomponentClient = mockk(relaxed = true)
 ) {
    val e = Base64.getEncoder().encodeToString(jwtStub.publicKey.publicExponent.toByteArray())
    val n = Base64.getEncoder().encodeToString(jwtStub.publicKey.modulus.toByteArray())

@@ -1,6 +1,7 @@
 package no.nav.su.inntekt
 
 import org.json.JSONObject
+import java.time.YearMonth
 
 class Inntekter(source: String) {
    private val maanedligInntekter = JSONObject(source).getJSONArray("arbeidsInntektMaaned").map {
@@ -16,8 +17,7 @@ class Inntekter(source: String) {
 }
 
 private class MaanedligInntekt(source: JSONObject) {
-   private val year = source.getString("aarMaaned").subSequence(0, 4).toString().toInt()
-   private val month = source.getString("aarMaaned").subSequence(6, 7).toString().toInt()
+   private val yearMonth = source.getString("aarMaaned")
    private val inntekter =
       source.getJSONObject("arbeidsInntektInformasjon").getJSONArray("inntektListe").map {
           Inntekt(
@@ -25,12 +25,11 @@ private class MaanedligInntekt(source: JSONObject) {
           )
       }
 
-   internal fun validForYear(year: Int) = year == this.year
+   internal fun validForYear(year: Int) = year == YearMonth.parse(this.yearMonth).year
    internal fun totalInntekt() = inntekter.sumByDouble { it.beloep }
    fun toJson(): String = """
       {
-         "year": "$year",
-         "month": "$month",
+         "gjeldendeMaaned": "$yearMonth",
          "inntekter": [${inntekter.joinToString(",") { it.toJson() }}],
          "maanedsinntekt": ${totalInntekt()}
       }
