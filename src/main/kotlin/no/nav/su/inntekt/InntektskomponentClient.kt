@@ -23,13 +23,7 @@ class InntektskomponentClient(
       tom: YearMonth,
       callId: String
    ): Inntekter {
-      val (_, _, result) = "$baseUrl/api/v1/hentinntektliste".httpPost(
-         listOf(
-            "fnr" to fnr,
-            "fom" to "2001-01",
-            "tom" to "2019-12"
-         )
-      )
+      val (_, _, result) = "$baseUrl/api/v1/hentinntektliste".httpPost()
          .header(HttpHeaders.Authorization, "Bearer ${stsRestClient.token()}")
          .header(HttpHeaders.XRequestId, MDC.get(HttpHeaders.XRequestId))
          .header(HttpHeaders.ContentType, ContentType.Application.Json)
@@ -45,8 +39,8 @@ class InntektskomponentClient(
             },
             "ainntektsfilter": "SupplerendeStoenadA-inntekt",
             "formaal": "Supplerende",
-            "maanedFom": $fom,
-            "maanedTom": $tom
+            "maanedFom": "$fom",
+            "maanedTom": "$tom"
             }
          """.trimIndent()
          ).responseString()
