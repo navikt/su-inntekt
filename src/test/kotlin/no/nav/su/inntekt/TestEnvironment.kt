@@ -79,47 +79,96 @@ fun TestApplicationEngine.withCallId(
 
 private val inntektJson = """
    {
-      "ident": {
-         "identifikator": "12121212345",
-         "aktoerType": "NATURLIG_IDENT"
-      },
-      "arbeidsInntektMaaned": [{
-         "aarMaaned": "2018-01",
+     "arbeidsInntektMaaned": [
+       {
+         "aarMaaned": "2020-01",
          "arbeidsInntektInformasjon": {
-            "inntektListe": [{
-               "beloep": "1000.50",
-               "inntektType": "LOENNSINNTEKT"
-            }]
+           "inntektListe": [
+             {
+               "inntektType": "LOENNSINNTEKT",
+               "beloep": 25000,
+               "fordel": "kontantytelse",
+               "inntektskilde": "A-ordningen",
+               "inntektsperiodetype": "Maaned",
+               "inntektsstatus": "LoependeInnrapportert",
+               "leveringstidspunkt": "2020-01",
+               "utbetaltIMaaned": "2020-01",
+               "opplysningspliktig": {
+                 "identifikator": "873152362",
+                 "aktoerType": "ORGANISASJON"
+               },
+               "virksomhet": {
+                 "identifikator": "873152362",
+                 "aktoerType": "ORGANISASJON"
+               },
+               "inntektsmottaker": {
+                 "identifikator": "27088921696",
+                 "aktoerType": "NATURLIG_IDENT"
+               },
+               "inngaarIGrunnlagForTrekk": true,
+               "utloeserArbeidsgiveravgift": true,
+               "informasjonsstatus": "InngaarAlltid",
+               "beskrivelse": "fastloenn"
+             },
+             {
+               "inntektType": "LOENNSINNTEKT",
+               "beloep": 2000,
+               "fordel": "kontantytelse",
+               "inntektskilde": "A-ordningen",
+               "inntektsperiodetype": "Maaned",
+               "inntektsstatus": "LoependeInnrapportert",
+               "leveringstidspunkt": "2020-01",
+               "utbetaltIMaaned": "2020-01",
+               "opplysningspliktig": {
+                 "identifikator": "873152362",
+                 "aktoerType": "ORGANISASJON"
+               },
+               "virksomhet": {
+                 "identifikator": "873152362",
+                 "aktoerType": "ORGANISASJON"
+               },
+               "inntektsmottaker": {
+                 "identifikator": "27088921696",
+                 "aktoerType": "NATURLIG_IDENT"
+               },
+               "inngaarIGrunnlagForTrekk": true,
+               "utloeserArbeidsgiveravgift": true,
+               "informasjonsstatus": "InngaarAlltid",
+               "beskrivelse": "kapitalInntekt"
+             },
+             {
+               "inntektType": "YTELSE_FRA_OFFENTLIGE",
+               "beloep": 5000,
+               "fordel": "kontantytelse",
+               "inntektskilde": "A-ordningen",
+               "inntektsperiodetype": "Maaned",
+               "inntektsstatus": "LoependeInnrapportert",
+               "leveringstidspunkt": "2020-01",
+               "utbetaltIMaaned": "2020-01",
+               "opplysningspliktig": {
+                 "identifikator": "873152362",
+                 "aktoerType": "ORGANISASJON"
+               },
+               "virksomhet": {
+                 "identifikator": "873152362",
+                 "aktoerType": "ORGANISASJON"
+               },
+               "inntektsmottaker": {
+                 "identifikator": "27088921696",
+                 "aktoerType": "NATURLIG_IDENT"
+               },
+               "inngaarIGrunnlagForTrekk": true,
+               "utloeserArbeidsgiveravgift": true,
+               "informasjonsstatus": "InngaarAlltid",
+               "beskrivelse": "ufoeretrygd"
+             }
+           ]
          }
-      },
-         {
-            "aarMaaned": "2018-02",
-            "arbeidsInntektInformasjon": {
-               "inntektListe": [{
-                  "beloep": "1000.50",
-                  "inntektType": "LOENNSINNTEKT"
-               }]
-            }
-         },
-         {
-            "aarMaaned": "2018-03",
-            "arbeidsInntektInformasjon": {
-               "inntektListe": [{
-                  "beloep": "1000.50",
-                  "inntektType": "LOENNSINNTEKT"
-               }]
-            }
-         },
-         {
-            "aarMaaned": "2019-01",
-            "arbeidsInntektInformasjon": {
-               "inntektListe": [{
-                  "beloep": "1000.50",
-                  "inntektType": "LOENNSINNTEKT"
-               }]
-            }
-         }
-      ]
+       }
+     ],
+     "ident": {
+       "identifikator": "27088921696",
+       "aktoerType": "NATURLIG_IDENT"
+     }
    }
-
 """.trimIndent()

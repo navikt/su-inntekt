@@ -36,13 +36,20 @@ private class MaanedligInntekt(source: JSONObject) {
    """.trimIndent()
 }
 
-private class Inntekt(source: JSONObject) {
+private class Inntekt(private val source: JSONObject) {
    internal val beloep = source.getDouble("beloep")
-   internal val type = source.getString("inntektType")
+
    fun toJson(): String = """
       {
+         "beskrivelse": "${source["beskrivelse"]}",
          "beloep": "$beloep",
-         "type": "$type"
+         "type": "${source["inntektType"]}",
+         "inntektsperiodetype": "${source["inntektsperiodetype"]}",
+         "utbetaltIMaaned": "${source["utbetaltIMaaned"]}",
+         "virksomhet": {
+           "identifikator": "${source.getJSONObject("virksomhet")["identifikator"]}",
+           "aktoerType": ${source.getJSONObject("virksomhet")["aktoerType"]}"
+         },
       }
    """.trimIndent()
 }
