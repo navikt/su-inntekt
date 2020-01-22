@@ -31,7 +31,6 @@ private class MaanedligInntekt(source: JSONObject) {
       {
          "gjeldendeMaaned": "$yearMonth",
          "inntekter": [${inntekter.joinToString(",") { it.toJson() }}],
-         "maanedsinntekt": ${totalInntekt()}
       }
    """.trimIndent()
 }
@@ -48,8 +47,8 @@ private class Inntekt(private val source: JSONObject) {
          "utbetaltIMaaned": "${source["utbetaltIMaaned"]}",
          "virksomhet": {
            "identifikator": "${source.getJSONObject("virksomhet")["identifikator"]}",
-           "aktoerType": ${source.getJSONObject("virksomhet")["aktoerType"]}"
-         },
+           "aktoerType": "${source.getJSONObject("virksomhet")["aktoerType"]}"
+         }
       }
    """.trimIndent()
 }
