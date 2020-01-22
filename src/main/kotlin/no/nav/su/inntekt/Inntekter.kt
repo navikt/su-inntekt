@@ -4,9 +4,9 @@ import org.json.JSONObject
 import java.time.YearMonth
 
 class Inntekter(source: String) {
-   private val maanedligInntekter = JSONObject(source).getJSONArray("arbeidsInntektMaaned").map {
+   private val maanedligInntekter = JSONObject(source).optJSONArray("arbeidsInntektMaaned")?.map {
        MaanedligInntekt(it as JSONObject)
-   }
+   } ?: emptyList()
 
    fun totalInntekt(year: Int) = maanedligInntekter.filter { it.validForYear(year) }.sumByDouble { it.totalInntekt() }
    fun toJson(): String = """

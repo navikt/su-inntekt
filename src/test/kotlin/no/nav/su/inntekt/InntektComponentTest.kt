@@ -71,7 +71,40 @@ internal class InntektComponentTest {
          }
       }.apply {
          assertEquals(OK, response.status())
-         println(response.content)
+      }
+   }
+
+   @Test
+   fun `hent tom inntekt`() {
+      WireMock.stubFor(
+         WireMock.post(urlPathEqualTo("/api/v1/hentinntektliste"))
+            .withHeader(Authorization, equalTo("Bearer $STS_TOKEN"))
+            .withHeader("Nav-Consumer-Id", equalTo("supstonad"))
+            .withHeader("Nav-Call-Id", AnythingPattern())
+            .willReturn(
+               WireMock.okJson(
+                  """{
+                        "ident": {
+                           "identifikator": "aktørId",
+                           "aktoerType": "AKTOER_ID"
+                        }
+                     }""".trimIndent()
+               )
+            )
+      )
+
+      val token = jwtStub.createTokenFor()
+      withTestApplication({
+         testEnv(wireMockServer)
+         suinntekt()
+      }) {
+         withCallId(Post, INNTEKT_PATH) {
+            addHeader(Authorization, "Bearer $token")
+            addHeader(ContentType, FormUrlEncoded.toString())
+            setBody("fnr=01010112345&fom=2018-01&tom=2018-12")
+         }
+      }.apply {
+         assertEquals(OK, response.status())
       }
    }
 
