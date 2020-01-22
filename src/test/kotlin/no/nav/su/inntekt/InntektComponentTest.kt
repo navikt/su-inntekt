@@ -109,80 +109,99 @@ internal class InntektComponentTest {
    }
 
    private val inntekterResponse = """
-    {
+      {
         "arbeidsInntektMaaned": [
-            {
-                "aarMaaned": "2018-12",
-                "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                        {
-                            "inntektType": "LOENNSINNTEKT",
-                            "beloep": 25000,
-                            "fordel": "kontantytelse",
-                            "inntektskilde": "A-ordningen",
-                            "inntektsperiodetype": "Maaned",
-                            "inntektsstatus": "LoependeInnrapportert",
-                            "leveringstidspunkt": "2020-01",
-                            "utbetaltIMaaned": "2018-12",
-                            "opplysningspliktig": {
-                                "identifikator": "orgnummer1",
-                                "aktoerType": "ORGANISASJON"
-                            },
-                            "virksomhet": {
-                                "identifikator": "orgnummer1",
-                                "aktoerType": "ORGANISASJON"
-                            },
-                            "inntektsmottaker": {
-                                "identifikator": "aktørId",
-                                "aktoerType": "AKTOER_ID"
-                            },
-                            "inngaarIGrunnlagForTrekk": true,
-                            "utloeserArbeidsgiveravgift": true,
-                            "informasjonsstatus": "InngaarAlltid",
-                            "beskrivelse": "fastloenn"
-                        }
-                    ]
+          {
+            "aarMaaned": "2020-01",
+            "arbeidsInntektInformasjon": {
+              "inntektListe": [
+                {
+                  "inntektType": "LOENNSINNTEKT",
+                  "beloep": 25000,
+                  "fordel": "kontantytelse",
+                  "inntektskilde": "A-ordningen",
+                  "inntektsperiodetype": "Maaned",
+                  "inntektsstatus": "LoependeInnrapportert",
+                  "leveringstidspunkt": "2020-01",
+                  "utbetaltIMaaned": "2020-01",
+                  "opplysningspliktig": {
+                    "identifikator": "873152362",
+                    "aktoerType": "ORGANISASJON"
+                  },
+                  "virksomhet": {
+                    "identifikator": "873152362",
+                    "aktoerType": "ORGANISASJON"
+                  },
+                  "inntektsmottaker": {
+                    "identifikator": "27088921696",
+                    "aktoerType": "NATURLIG_IDENT"
+                  },
+                  "inngaarIGrunnlagForTrekk": true,
+                  "utloeserArbeidsgiveravgift": true,
+                  "informasjonsstatus": "InngaarAlltid",
+                  "beskrivelse": "fastloenn"
+                },
+                {
+                  "inntektType": "LOENNSINNTEKT",
+                  "beloep": 2000,
+                  "fordel": "kontantytelse",
+                  "inntektskilde": "A-ordningen",
+                  "inntektsperiodetype": "Maaned",
+                  "inntektsstatus": "LoependeInnrapportert",
+                  "leveringstidspunkt": "2020-01",
+                  "utbetaltIMaaned": "2020-01",
+                  "opplysningspliktig": {
+                    "identifikator": "873152362",
+                    "aktoerType": "ORGANISASJON"
+                  },
+                  "virksomhet": {
+                    "identifikator": "873152362",
+                    "aktoerType": "ORGANISASJON"
+                  },
+                  "inntektsmottaker": {
+                    "identifikator": "27088921696",
+                    "aktoerType": "NATURLIG_IDENT"
+                  },
+                  "inngaarIGrunnlagForTrekk": true,
+                  "utloeserArbeidsgiveravgift": true,
+                  "informasjonsstatus": "InngaarAlltid",
+                  "beskrivelse": "kapitalInntekt"
+                },
+                {
+                  "inntektType": "YTELSE_FRA_OFFENTLIGE",
+                  "beloep": 5000,
+                  "fordel": "kontantytelse",
+                  "inntektskilde": "A-ordningen",
+                  "inntektsperiodetype": "Maaned",
+                  "inntektsstatus": "LoependeInnrapportert",
+                  "leveringstidspunkt": "2020-01",
+                  "utbetaltIMaaned": "2020-01",
+                  "opplysningspliktig": {
+                    "identifikator": "873152362",
+                    "aktoerType": "ORGANISASJON"
+                  },
+                  "virksomhet": {
+                    "identifikator": "873152362",
+                    "aktoerType": "ORGANISASJON"
+                  },
+                  "inntektsmottaker": {
+                    "identifikator": "27088921696",
+                    "aktoerType": "NATURLIG_IDENT"
+                  },
+                  "inngaarIGrunnlagForTrekk": true,
+                  "utloeserArbeidsgiveravgift": true,
+                  "informasjonsstatus": "InngaarAlltid",
+                  "beskrivelse": "ufoeretrygd"
                 }
-            },
-            {
-                "aarMaaned": "2019-05",
-                "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                        {
-                            "inntektType": "LOENNSINNTEKT",
-                            "beloep": 25000,
-                            "fordel": "kontantytelse",
-                            "inntektskilde": "A-ordningen",
-                            "inntektsperiodetype": "Maaned",
-                            "inntektsstatus": "LoependeInnrapportert",
-                            "leveringstidspunkt": "2020-01",
-                            "utbetaltIMaaned": "2019-05",
-                            "opplysningspliktig": {
-                                "identifikator": "orgnummer2",
-                                "aktoerType": "ORGANISASJON"
-                            },
-                            "virksomhet": {
-                                "identifikator": "orgnummer2",
-                                "aktoerType": "ORGANISASJON"
-                            },
-                            "inntektsmottaker": {
-                                "identifikator": "aktørId",
-                                "aktoerType": "AKTOER_ID"
-                            },
-                            "inngaarIGrunnlagForTrekk": true,
-                            "utloeserArbeidsgiveravgift": true,
-                            "informasjonsstatus": "InngaarAlltid",
-                            "beskrivelse": "fastloenn"
-                        }
-                    ]
-                }
+              ]
             }
+          }
         ],
         "ident": {
-            "identifikator": "aktørId",
-            "aktoerType": "AKTOER_ID"
+          "identifikator": "27088921696",
+          "aktoerType": "NATURLIG_IDENT"
         }
-    }
+      }
 """
 
 }
