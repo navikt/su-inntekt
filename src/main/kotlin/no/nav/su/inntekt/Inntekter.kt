@@ -34,7 +34,7 @@ private class MaanedligInntekt(source: JSONObject) {
    fun toJson(): String = """
       {
          "gjeldendeMaaned": "$yearMonth",
-         "inntekter": [${inntekter.joinToString(",") { it.toJson() }}],
+         "inntekter": [${inntekter.joinToString(",") { it.toJson() }}]
       }
    """.trimIndent()
 }
