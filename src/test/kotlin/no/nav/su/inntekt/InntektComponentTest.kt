@@ -10,7 +10,9 @@ import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpMethod.Companion.Post
+import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
@@ -105,6 +107,31 @@ internal class InntektComponentTest {
          }
       }.apply {
          assertEquals(OK, response.status())
+      }
+   }
+
+   @Test
+   fun `403 fra inntektskomponent skal gi 403 fra su-inntekt`() {
+      WireMock.stubFor(
+         WireMock.post(urlPathEqualTo("/api/v1/hentinntektliste"))
+            .withHeader(Authorization, equalTo("Bearer $STS_TOKEN"))
+            .withHeader("Nav-Consumer-Id", equalTo("supstonad"))
+            .withHeader("Nav-Call-Id", AnythingPattern())
+            .willReturn(WireMock.forbidden())
+      )
+
+      val token = jwtStub.createTokenFor()
+      withTestApplication({
+         testEnv(wireMockServer)
+         suinntekt()
+      }) {
+         withCallId(Post, INNTEKT_PATH) {
+            addHeader(Authorization, "Bearer $token")
+            addHeader(ContentType, FormUrlEncoded.toString())
+            setBody("fnr=01010112345&fom=2018-01&tom=2018-12")
+         }
+      }.apply {
+         assertEquals(Forbidden, response.status())
       }
    }
 

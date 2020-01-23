@@ -120,4 +120,3 @@ private fun getJWKConfig(wellKnownUrl: String): JSONObject {
 fun Application.fromEnvironment(path: String): String = environment.config.property(path).getString()
 
 fun main(args: Array<String>) = io.ktor.server.netty.EngineMain.main(args)
-

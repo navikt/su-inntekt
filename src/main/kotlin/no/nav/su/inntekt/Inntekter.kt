@@ -3,7 +3,11 @@ package no.nav.su.inntekt
 import org.json.JSONObject
 import java.time.YearMonth
 
-class Inntekter(source: String) {
+sealed class InntektResultat
+
+class Feil(val kode: Int, val beskrivelse: String): InntektResultat()
+
+class Inntekter(source: String): InntektResultat() {
    private val maanedligInntekter = JSONObject(source).optJSONArray("arbeidsInntektMaaned")?.map {
        MaanedligInntekt(it as JSONObject)
    } ?: emptyList()

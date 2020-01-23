@@ -8,7 +8,6 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.post
 import io.ktor.util.getOrFail
-import org.apache.http.client.methods.RequestBuilder.post
 import java.time.YearMonth
 
 fun Route.inntektRoute(inntekt: InntektskomponentClient) {
@@ -20,6 +19,9 @@ fun Route.inntektRoute(inntekt: InntektskomponentClient) {
          YearMonth.parse(params.getOrFail("tom")),
          call.callId!!
       )
-      call.respond(HttpStatusCode.OK, inntekter.toJson())
+      when (inntekter) {
+         is Inntekter -> call.respond(HttpStatusCode.OK, inntekter.toJson())
+         is Feil -> call.respond(HttpStatusCode.fromValue(inntekter.kode), inntekter.beskrivelse)
+      }
    }
 }
