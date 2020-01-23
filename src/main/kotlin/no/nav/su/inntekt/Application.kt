@@ -18,12 +18,8 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.request.path
-import io.ktor.request.receiveParameters
-import io.ktor.response.respond
-import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
-import io.ktor.util.getOrFail
 import io.micrometer.core.instrument.Clock
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
@@ -41,7 +37,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.slf4j.event.Level
 import java.net.URL
-import java.time.YearMonth
 
 const val INNTEKT_PATH = "/inntekt"
 private val sikkerLogg = LoggerFactory.getLogger("sikkerLogg")
@@ -99,16 +94,7 @@ fun Application.suinntekt(
             }
             filter { call-> call.request.path().startsWith(INNTEKT_PATH) }
          }
-         post(INNTEKT_PATH) {
-            val params = call.receiveParameters()
-            val inntekter = inntekt.hentInntektsliste(
-               params.getOrFail("fnr"),
-               YearMonth.parse(params.getOrFail("fom")),
-               YearMonth.parse(params.getOrFail("tom")),
-               call.callId!!
-            )
-            call.respond(HttpStatusCode.OK, inntekter.toJson())
-         }
+         inntektRoute(inntekt)
       }
       nais()
    }
