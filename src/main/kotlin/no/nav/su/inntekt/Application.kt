@@ -10,10 +10,7 @@ import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.JWTCredential
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
-import io.ktor.features.CallId
-import io.ktor.features.CallLogging
-import io.ktor.features.callId
-import io.ktor.features.generate
+import io.ktor.features.*
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
@@ -33,13 +30,9 @@ import io.prometheus.client.CollectorRegistry
 import no.nav.su.inntekt.nais.nais
 import no.nav.su.inntekt.sts.STS
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.slf4j.event.Level
 import java.net.URL
-
-const val INNTEKT_PATH = "/inntekt"
-private val sikkerLogg = LoggerFactory.getLogger("sikkerLogg")
 
 val collectorRegistry = CollectorRegistry.defaultRegistry
 

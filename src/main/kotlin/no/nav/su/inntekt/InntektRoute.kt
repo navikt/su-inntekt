@@ -7,11 +7,14 @@ import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.post
+import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
 import java.time.YearMonth
 
+const val INNTEKT_PATH = "/inntekt"
+@KtorExperimentalAPI
 fun Route.inntektRoute(inntekt: InntektskomponentClient) {
-   post("/inntekt") {
+   post(INNTEKT_PATH) {
       val params = call.receiveParameters()
       val inntekter = inntekt.hentInntektsliste(
          params.getOrFail("fnr"),
