@@ -37,7 +37,7 @@ import java.net.URL
 val collectorRegistry = CollectorRegistry.defaultRegistry
 
 @KtorExperimentalAPI
-fun Application.suinntekt(
+internal fun Application.suinntekt(
    jwkConfig: JSONObject = getJWKConfig(fromEnvironment("azure.wellKnownUrl")),
    jwkProvider: JwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build(),
    sts: STS = STS(baseUrl = fromEnvironment("sts.baseUrl"), username = fromEnvironment("sts.username"), password = fromEnvironment("sts.password")),

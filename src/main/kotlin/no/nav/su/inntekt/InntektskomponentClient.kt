@@ -14,14 +14,12 @@ import no.nav.su.inntekt.sts.STS
 import org.slf4j.MDC
 import java.time.YearMonth
 
-class InntektskomponentClient(
+internal class InntektskomponentClient(
    private val baseUrl: String,
    private val stsRestClient: STS
 ) {
-   fun hentInntektsliste(
-      fnr: String,
-      fom: YearMonth,
-      tom: YearMonth,
+   internal fun hentInntektsliste(
+      params: Søkeparametere,
       callId: String
    ): InntektResultat {
       val (_, response, result) = "$baseUrl/api/v1/hentinntektliste".httpPost()
@@ -35,13 +33,13 @@ class InntektskomponentClient(
             """
             {
             "ident": {
-            "identifikator": "$fnr",
+            "identifikator": "${params.fnr}",
             "aktoerType":"NATURLIG_IDENT"
             },
             "ainntektsfilter": "SupplerendeStoenadA-inntekt",
             "formaal": "Supplerende",
-            "maanedFom": "$fom",
-            "maanedTom": "$tom"
+            "maanedFom": "${params.fom}",
+            "maanedTom": "${params.tom}"
             }
          """.trimIndent()
          ).responseString()

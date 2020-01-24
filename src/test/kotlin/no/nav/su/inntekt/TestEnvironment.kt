@@ -41,7 +41,7 @@ fun Application.testEnv(wireMockServer: WireMockServer? = null) {
 
 val jwtStub = JwtStub()
 @KtorExperimentalAPI
-fun Application.usingMocks(
+internal fun Application.usingMocks(
    jwkConfig: JSONObject = mockk(relaxed = true),
    jwkProvider: JwkProvider = mockk(relaxed = true),
    inntektskomponent: InntektskomponentClient = mockk(relaxed = true)
@@ -56,7 +56,7 @@ fun Application.usingMocks(
    }.returns(AZURE_ISSUER)
 
    every {
-      inntektskomponent.hentInntektsliste(any(), any(), any(), any())
+      inntektskomponent.hentInntektsliste(any(), any())
    } returns (Inntekter(inntektJson))
 
    suinntekt(
