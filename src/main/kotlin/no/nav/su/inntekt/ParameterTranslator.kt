@@ -21,7 +21,7 @@ internal class ParameterTranslator(private val parameters: Parameters) {
    private fun Parameters.fnr() = this["fnr"]!!
 }
 
-internal fun String.harYearMonthFormat() = this.matches("""[0-9]{1,4}-(0[1-9]|1[1-2])""".toRegex())
+internal fun String.harYearMonthFormat() = this.matches("""[0-9]{1,4}-(0[1-9]|1[0-2])""".toRegex())
 private fun String.tilYearMonth() = YearMonth.parse(this)
 
 internal sealed class Parametere
