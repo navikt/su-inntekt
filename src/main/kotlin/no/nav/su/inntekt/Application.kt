@@ -64,7 +64,7 @@ internal fun Application.suinntekt(
          collectorRegistry,
          Clock.SYSTEM
       )
-      meterBinders = kotlin.collections.listOf(
+      meterBinders = listOf(
          ClassLoaderMetrics(),
          JvmMemoryMetrics(),
          JvmGcMetrics(),
