@@ -40,8 +40,8 @@ val collectorRegistry = CollectorRegistry.defaultRegistry
 internal fun Application.suinntekt(
    jwkConfig: JSONObject = getJWKConfig(fromEnvironment("azure.wellKnownUrl")),
    jwkProvider: JwkProvider = JwkProviderBuilder(URL(jwkConfig.getString("jwks_uri"))).build(),
-   sts: STS = STS(baseUrl = fromEnvironment("sts.baseUrl"), username = fromEnvironment("sts.username"), password = fromEnvironment("sts.password")),
-   inntekt: InntektskomponentClient = InntektskomponentClient(baseUrl = fromEnvironment("inntektUrl"), stsRestClient = sts)
+   auth: TokenProvider = STS(baseUrl = fromEnvironment("sts.baseUrl"), username = fromEnvironment("sts.username"), password = fromEnvironment("sts.password")),
+   inntekt: InntektskomponentClient = InntektskomponentClient(baseUrl = fromEnvironment("inntektUrl"), auth = auth)
 ) {
    install(Authentication) {
       jwt {

@@ -1,29 +1,20 @@
 package no.nav.su.inntekt
 
 import com.github.kittinunf.fuel.httpPost
-import io.ktor.client.HttpClient
-import io.ktor.client.request.accept
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode.Companion.Forbidden
-import kotlinx.coroutines.runBlocking
-import no.nav.su.inntekt.sts.STS
 import org.slf4j.MDC
-import java.time.YearMonth
 
 internal class InntektskomponentClient(
    private val baseUrl: String,
-   private val stsRestClient: STS
+   private val auth: TokenProvider
 ) {
    internal fun hentInntektsliste(
       params: Søkeparametere,
       callId: String
    ): InntektResultat {
       val (_, response, result) = "$baseUrl/api/v1/hentinntektliste".httpPost()
-         .header(HttpHeaders.Authorization, "Bearer ${stsRestClient.token()}")
+         .header(HttpHeaders.Authorization, "Bearer ${auth.token()}")
          .header(HttpHeaders.XRequestId, MDC.get(HttpHeaders.XRequestId))
          .header(HttpHeaders.ContentType, ContentType.Application.Json)
          .header(HttpHeaders.Accept, ContentType.Application.Json)
@@ -50,4 +41,8 @@ internal class InntektskomponentClient(
          Inntekter(result.get())
       }
    }
+}
+
+internal interface TokenProvider {
+   fun token(): String
 }

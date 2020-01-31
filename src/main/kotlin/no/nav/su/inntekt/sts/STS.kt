@@ -2,6 +2,7 @@ package no.nav.su.inntekt.sts
 
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.httpGet
+import no.nav.su.inntekt.TokenProvider
 import no.nav.su.inntekt.sts.STSToken.Companion.isValid
 import org.json.JSONObject
 import java.time.LocalDateTime
@@ -10,10 +11,10 @@ class STS(
    private val baseUrl: String = "http://security-token-service.default.svc.nais.local",
    private val username: String,
    private val password: String
-) {
+): TokenProvider {
    private var token: STSToken? = null
 
-   fun token(): String {
+   override fun token(): String {
       if (!isValid(token)) {
          val (_, _, result) = "$baseUrl/rest/v1/sts/token?grant_type=client_credentials&scope=openid".httpGet()
             .authentication().basic(username, password)
