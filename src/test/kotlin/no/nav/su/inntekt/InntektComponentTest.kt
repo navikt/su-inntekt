@@ -12,7 +12,6 @@ import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpMethod.Companion.Post
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
@@ -66,7 +65,7 @@ internal class InntektComponentTest {
          testEnv(wireMockServer)
          suinntekt()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
             addHeader(ContentType, FormUrlEncoded.toString())
             setBody("fnr=01010112345&fom=2018-01&tom=2018-12")
@@ -100,7 +99,7 @@ internal class InntektComponentTest {
          testEnv(wireMockServer)
          suinntekt()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
             addHeader(ContentType, FormUrlEncoded.toString())
             setBody("fnr=01010112345&fom=2018-01&tom=2018-12")
@@ -125,7 +124,7 @@ internal class InntektComponentTest {
          testEnv(wireMockServer)
          suinntekt()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
             addHeader(ContentType, FormUrlEncoded.toString())
             setBody("fnr=01010112345&fom=2018-01&tom=2018-12")

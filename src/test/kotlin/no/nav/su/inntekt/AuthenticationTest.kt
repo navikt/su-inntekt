@@ -24,7 +24,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Post, INNTEKT_PATH)
+         withCorrelationId(Post, INNTEKT_PATH)
       }.apply {
          assertEquals(Unauthorized, response.status())
       }
@@ -37,7 +37,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
             addHeader(ContentType, FormUrlEncoded.toString())
             setBody("fnr=01010112345&fom=2018-01&tom=2018-12")
@@ -55,7 +55,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -71,7 +71,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {
@@ -87,7 +87,7 @@ internal class AuthenticationTest {
          testEnv()
          usingMocks()
       }) {
-         withCallId(Post, INNTEKT_PATH) {
+         withCorrelationId(Post, INNTEKT_PATH) {
             addHeader(Authorization, "Bearer $token")
          }
       }.apply {

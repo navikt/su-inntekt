@@ -15,7 +15,7 @@ internal class InntektskomponentClient(
    ): InntektResultat {
       val (_, response, result) = "$baseUrl/api/v1/hentinntektliste".httpPost()
          .header(HttpHeaders.Authorization, "Bearer ${auth.token()}")
-         .header(HttpHeaders.XRequestId, MDC.get(HttpHeaders.XRequestId))
+         .header(HttpHeaders.XCorrelationId, MDC.get(HttpHeaders.XCorrelationId))
          .header(HttpHeaders.ContentType, ContentType.Application.Json)
          .header(HttpHeaders.Accept, ContentType.Application.Json)
          .header("Nav-Call-Id", callId)

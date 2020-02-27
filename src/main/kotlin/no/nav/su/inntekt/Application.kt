@@ -77,13 +77,13 @@ internal fun Application.suinntekt(
    routing {
       authenticate {
          install(CallId) {
-            header(HttpHeaders.XRequestId)
+            header(HttpHeaders.XCorrelationId)
             generate(17)
          }
          install(CallLogging) {
             level = Level.INFO
             intercept(ApplicationCallPipeline.Monitoring) {
-               MDC.put(HttpHeaders.XRequestId, call.callId)
+               MDC.put(HttpHeaders.XCorrelationId, call.callId)
             }
             filter { call-> call.request.path().startsWith(INNTEKT_PATH) }
          }
